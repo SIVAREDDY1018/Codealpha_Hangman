@@ -1,0 +1,50 @@
+# Online Python compiler (interpreter) to run Python online.
+# Write Python 3 code in this online editor and run it.
+import random
+import string
+
+class Hangman:
+    def _init_(self, word_list, num_lives=6):
+        self.word_list = word_list
+        self.num_lives = num_lives
+        self.word = random.choice(word_list).upper()
+        self.word_guessed = ['_'] * len(self.word)
+        self.num_letters = len(set(self.word))
+        self.list_of_guesses = []
+
+    def ask_letter(self):
+        while True:
+            guess = input("Guess a letter: ").upper()
+            if len(guess) != 1 or guess not in string.ascii_letters:
+                print("Invalid input. Please enter a single letter.")
+            elif guess in self.list_of_guesses:
+                print("You already tried that letter. Please guess again.")
+            else:
+                self.list_of_guesses.append(guess)
+                break
+        return guess
+
+    def play_game(self):
+        word_completed = False
+        while self.num_lives > 0 and not word_completed:
+            guess = self.ask_letter()
+            if guess in self.word:
+                for i in range(len(self.word)):
+                    if self.word[i] == guess:
+                        self.word_guessed[i] = guess
+                self.num_letters -= 1
+            else:
+                self.num_lives -= 1
+                print(f"Incorrect guess. You have {self.num_lives} lives left.")
+            print(" ".join(self.word_guessed))
+            if self.num_letters == 0:
+                word_completed = True
+        if word_completed:
+            print(f"Congratulations! You guessed the word: {self.word}")
+        else:
+            print(f"Sorry, you ran out of lives. The word was: {self.word}")
+
+if _name_ == "_main_":
+    word_list = ["python", "hangman", "coding", "programming","prasad"]
+    game = Hangman(word_list)
+    game.play_game()
